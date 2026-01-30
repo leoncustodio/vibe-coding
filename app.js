@@ -213,7 +213,7 @@ async function describeImage(imageUrl, apiKey) {
                     content: [
                         {
                             type: 'text',
-                            text: 'Describe this image in detail. Focus on the main subjects, composition, colors, mood, and style. Be descriptive and vivid in your description.'
+                            text: 'Describe this image as if you were a 3 year old child.'
                         },
                         {
                             type: 'image_url',
@@ -356,8 +356,13 @@ function handleClear() {
 }
 
 function showError(message) {
-    errorDisplay.textContent = message;
-    errorDisplay.style.display = 'block';
+    const errorContent = errorDisplay.querySelector('.error-content');
+    if (errorContent) {
+        errorContent.textContent = message;
+    } else {
+        errorDisplay.textContent = message;
+    }
+    errorDisplay.style.display = 'flex';
     scrollToTop();
 }
 

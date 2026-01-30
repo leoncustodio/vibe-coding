@@ -3,39 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vibe Coding - Iterative Image Generation</title>
+    <title>✨ Vibe Coding - Let's Create!</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Background decorations -->
+    <div class="bg-decoration decoration-1"></div>
+    <div class="bg-decoration decoration-2"></div>
+    <div class="bg-decoration decoration-3"></div>
+
     <div class="container">
-        <header>
-            <h1>🎨 Vibe Coding</h1>
-            <p class="subtitle">Iterative Image Generation with AI</p>
-            <p class="description">
-                Transform text into images, then let AI describe and reimagine them in an endless creative loop.
+        <header class="hero">
+            <div class="hero-emoji">🎨✨🤖</div>
+            <h1 class="hero-title">
+                <span class="gradient-text">Vibe Coding</span>
+            </h1>
+            <p class="hero-subtitle">Transform ideas into endless visual journeys!</p>
+            <p class="hero-description">
+                Start with a prompt, watch AI generate an image, describe it, and create a new one.
+                It's like creative telephone... but with robots! 🎭
             </p>
         </header>
 
-        <div class="warning-box">
-            <strong>⚠️ API Costs:</strong> Each iteration uses OpenAI API credits.
-            DALL-E 3: ~$0.04-0.12 per image | GPT-4 Vision: ~$0.01-0.03 per description
+        <div class="info-card">
+            <span class="info-emoji">💡</span>
+            <div class="info-content">
+                <strong>Pro tip:</strong> Each iteration costs a few cents. Start with 2-3 iterations to test the magic!
+            </div>
         </div>
 
-        <section class="input-section">
-            <form id="generationForm">
-                <div class="form-group">
-                    <label for="promptInput">Initial Prompt</label>
+        <section class="control-panel">
+            <div class="panel-header">
+                <h2>🚀 Launch Your Creative Loop</h2>
+            </div>
+
+            <form id="generationForm" class="creation-form">
+                <div class="input-card">
+                    <div class="input-header">
+                        <span class="input-emoji">💭</span>
+                        <label for="promptInput">What should we create?</label>
+                    </div>
                     <textarea
                         id="promptInput"
-                        placeholder="Describe the image you want to generate (e.g., 'a serene mountain landscape at sunset')"
+                        placeholder="A magical forest with glowing mushrooms under a starry night..."
                         rows="3"
                         required
                     ></textarea>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="iterationsInput">Iterations</label>
+                <div class="settings-row">
+                    <div class="input-card compact">
+                        <div class="input-header">
+                            <span class="input-emoji">🔄</span>
+                            <label for="iterationsInput">Loop it!</label>
+                        </div>
                         <input
                             type="number"
                             id="iterationsInput"
@@ -44,65 +68,87 @@
                             value="3"
                             required
                         >
-                        <small>Number of times to iterate (1-10)</small>
+                        <small>How many rounds? (1-10)</small>
                     </div>
 
-                    <div class="form-group">
-                        <label for="apiKeyInput">OpenAI API Key</label>
+                    <div class="input-card compact">
+                        <div class="input-header">
+                            <span class="input-emoji">🔑</span>
+                            <label for="apiKeyInput">API Key</label>
+                        </div>
                         <input
                             type="password"
                             id="apiKeyInput"
                             placeholder="sk-..."
                             required
                         >
-                        <small>Your API key is only stored in memory</small>
+                        <small>OpenAI API key (kept secret!)</small>
                     </div>
                 </div>
 
-                <div class="form-actions">
-                    <button type="submit" id="startButton" class="btn-primary">
-                        Start Generation
-                    </button>
-                    <button type="button" id="stopButton" class="btn-secondary" style="display: none;">
-                        Stop
-                    </button>
-                    <button type="button" id="clearButton" class="btn-secondary">
-                        Clear Results
-                    </button>
+                <div class="form-footer">
+                    <div class="checkbox-card">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="rememberApiKey">
+                            <span class="checkbox-custom"></span>
+                            <span>Remember my API key</span>
+                        </label>
+                    </div>
                 </div>
 
-                <div class="checkbox-group">
-                    <label>
-                        <input type="checkbox" id="rememberApiKey">
-                        Remember API key (stored in browser localStorage)
-                    </label>
+                <div class="action-buttons">
+                    <button type="submit" id="startButton" class="btn btn-primary">
+                        <span class="btn-emoji">✨</span>
+                        <span>Start Creating!</span>
+                    </button>
+                    <button type="button" id="stopButton" class="btn btn-danger" style="display: none;">
+                        <span class="btn-emoji">⏸️</span>
+                        <span>Stop</span>
+                    </button>
+                    <button type="button" id="clearButton" class="btn btn-secondary">
+                        <span class="btn-emoji">🗑️</span>
+                        <span>Clear All</span>
+                    </button>
                 </div>
             </form>
         </section>
 
-        <div id="errorDisplay" class="error-box" style="display: none;"></div>
+        <div id="errorDisplay" class="error-card" style="display: none;">
+            <span class="error-emoji">😅</span>
+            <div class="error-content"></div>
+        </div>
 
-        <div id="progressSection" class="progress-section" style="display: none;">
-            <div class="progress-info">
-                <span id="progressText">Starting...</span>
-                <span id="timeElapsed">0s</span>
+        <div id="progressSection" class="progress-card" style="display: none;">
+            <div class="progress-header">
+                <div class="progress-emoji">⚡</div>
+                <div class="progress-info">
+                    <div id="progressText" class="progress-text">Starting the magic...</div>
+                    <div id="timeElapsed" class="progress-time">0s</div>
+                </div>
             </div>
-            <div class="progress-bar">
-                <div id="progressFill" class="progress-fill"></div>
+            <div class="progress-bar-container">
+                <div id="progressFill" class="progress-bar-fill"></div>
             </div>
         </div>
 
         <section id="resultsSection" class="results-section">
-            <h2>Results</h2>
-            <div id="resultsContainer" class="results-container"></div>
+            <div class="results-header">
+                <h2>
+                    <span class="results-emoji">🎬</span>
+                    Your Creative Journey
+                </h2>
+            </div>
+            <div id="resultsContainer" class="results-grid"></div>
         </section>
     </div>
 
-    <footer>
-        <p>
-            Powered by OpenAI DALL-E 3 & GPT-4 Vision |
-            <a href="https://platform.openai.com/api-keys" target="_blank">Get API Key</a>
-        </p>
+    <footer class="playful-footer">
+        <div class="footer-content">
+            <p>
+                Made with 💜 using OpenAI magic •
+                <a href="https://platform.openai.com/api-keys" target="_blank" class="footer-link">Get your API key</a>
+            </p>
+        </div>
     </footer>
 
     <script src="app.js"></script>
