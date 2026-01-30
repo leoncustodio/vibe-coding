@@ -460,6 +460,17 @@ small {
     box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
 }
 
+.btn-export {
+    background: linear-gradient(135deg, var(--green), var(--cyan));
+    color: white;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+}
+
+.btn-export:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
+}
+
 /* Error Card */
 .error-card {
     display: flex;
@@ -586,6 +597,11 @@ small {
 
 .results-header {
     margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
 .results-header h2 {

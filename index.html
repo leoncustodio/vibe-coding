@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <!-- Background decorations -->
@@ -137,6 +138,10 @@
                     <span class="results-emoji">🎬</span>
                     Your Creative Journey
                 </h2>
+                <button id="exportPdfButton" class="btn btn-export" style="display: none;">
+                    <span class="btn-emoji">📄</span>
+                    <span>Export as PDF</span>
+                </button>
             </div>
             <div id="resultsContainer" class="results-grid"></div>
         </section>

@@ -29,6 +29,7 @@ const progressText = document.getElementById('progressText');
 const progressFill = document.getElementById('progressFill');
 const timeElapsed = document.getElementById('timeElapsed');
 const resultsContainer = document.getElementById('resultsContainer');
+const exportPdfButton = document.getElementById('exportPdfButton');
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -41,6 +42,7 @@ function setupEventListeners() {
     stopButton.addEventListener('click', handleStop);
     clearButton.addEventListener('click', handleClear);
     rememberApiKeyCheckbox.addEventListener('change', handleRememberApiKeyToggle);
+    exportPdfButton.addEventListener('click', handleExportPDF);
 }
 
 function loadApiKeyFromStorage() {
@@ -162,6 +164,11 @@ async function runIterations(initialPrompt, iterations, apiKey) {
 
         if (!shouldStop) {
             updateProgress(iterations, iterations, 'All iterations complete!');
+            // Show export button when complete
+            const cards = resultsContainer.querySelectorAll('.iteration-card');
+            if (cards.length > 0) {
+                exportPdfButton.style.display = 'flex';
+            }
         }
 
     } catch (error) {
@@ -353,6 +360,7 @@ function handleClear() {
     progressSection.style.display = 'none';
     progressFill.style.width = '0%';
     timeElapsed.textContent = '0s';
+    exportPdfButton.style.display = 'none';
 }
 
 function showError(message) {
@@ -381,6 +389,133 @@ function scrollToLatest() {
 
 function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Export to PDF
+async function handleExportPDF() {
+    try {
+        exportPdfButton.disabled = true;
+        exportPdfButton.innerHTML = '<span class="btn-emoji">⏳</span><span>Generating PDF...</span>';
+
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        const margin = 15;
+        const contentWidth = pageWidth - (margin * 2);
+
+        // Add title
+        pdf.setFontSize(24);
+        pdf.setTextColor(139, 92, 246);
+        pdf.text('Vibe Coding - Creative Journey', margin, margin + 10);
+
+        pdf.setFontSize(10);
+        pdf.setTextColor(107, 114, 128);
+        pdf.text(`Generated on ${new Date().toLocaleDateString()}`, margin, margin + 17);
+
+        let yPosition = margin + 30;
+
+        // Get all iteration cards
+        const cards = resultsContainer.querySelectorAll('.iteration-card');
+
+        for (let i = 0; i < cards.length; i++) {
+            const card = cards[i];
+            const iterationNum = i + 1;
+
+            // Check if we need a new page
+            if (yPosition > pageHeight - 100) {
+                pdf.addPage();
+                yPosition = margin;
+            }
+
+            // Add iteration header
+            pdf.setFontSize(16);
+            pdf.setTextColor(139, 92, 246);
+            pdf.text(`Iteration ${iterationNum}`, margin, yPosition);
+            yPosition += 10;
+
+            // Get the image
+            const imgElement = card.querySelector('.iteration-image');
+            if (imgElement) {
+                try {
+                    const imgData = await getImageData(imgElement.src);
+                    const imgWidth = contentWidth;
+                    const imgHeight = (imgElement.naturalHeight / imgElement.naturalWidth) * imgWidth;
+
+                    // Check if image fits, otherwise add new page
+                    if (yPosition + imgHeight > pageHeight - margin) {
+                        pdf.addPage();
+                        yPosition = margin;
+                    }
+
+                    pdf.addImage(imgData, 'PNG', margin, yPosition, imgWidth, imgHeight);
+                    yPosition += imgHeight + 10;
+                } catch (err) {
+                    console.error('Error adding image to PDF:', err);
+                }
+            }
+
+            // Add description
+            const descriptionText = card.querySelector('.description-text');
+            if (descriptionText && descriptionText.textContent !== 'Generating...' && descriptionText.textContent !== 'Generation complete!') {
+                // Check if we need a new page for description
+                if (yPosition > pageHeight - 50) {
+                    pdf.addPage();
+                    yPosition = margin;
+                }
+
+                pdf.setFontSize(11);
+                pdf.setTextColor(75, 85, 99);
+                pdf.setFont(undefined, 'bold');
+                pdf.text('Description:', margin, yPosition);
+                yPosition += 7;
+
+                pdf.setFont(undefined, 'normal');
+                pdf.setTextColor(107, 114, 128);
+                const splitText = pdf.splitTextToSize(descriptionText.textContent, contentWidth);
+                pdf.text(splitText, margin, yPosition);
+                yPosition += (splitText.length * 5) + 15;
+            }
+        }
+
+        // Save the PDF
+        const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+        pdf.save(`vibe-coding-${timestamp}.pdf`);
+
+        // Reset button
+        exportPdfButton.innerHTML = '<span class="btn-emoji">📄</span><span>Export as PDF</span>';
+        exportPdfButton.disabled = false;
+
+    } catch (error) {
+        console.error('PDF export error:', error);
+        showError(`Failed to export PDF: ${error.message}`);
+        exportPdfButton.innerHTML = '<span class="btn-emoji">📄</span><span>Export as PDF</span>';
+        exportPdfButton.disabled = false;
+    }
+}
+
+// Helper to get image data for PDF
+function getImageData(url) {
+    return new Promise((resolve, reject) => {
+        if (url.startsWith('data:')) {
+            // Already a data URL
+            resolve(url);
+        } else {
+            // Need to convert to data URL
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                resolve(canvas.toDataURL('image/png'));
+            };
+            img.onerror = reject;
+            img.src = url;
+        }
+    });
 }
 
 // Helper functions for buttons
