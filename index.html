@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibe Coding - Iterative Image Generation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎨 Vibe Coding</h1>
+            <p class="subtitle">Iterative Image Generation with AI</p>
+            <p class="description">
+                Transform text into images, then let AI describe and reimagine them in an endless creative loop.
+            </p>
+        </header>
+
+        <div class="warning-box">
+            <strong>⚠️ API Costs:</strong> Each iteration uses OpenAI API credits.
+            DALL-E 3: ~$0.04-0.12 per image | GPT-4 Vision: ~$0.01-0.03 per description
+        </div>
+
+        <section class="input-section">
+            <form id="generationForm">
+                <div class="form-group">
+                    <label for="promptInput">Initial Prompt</label>
+                    <textarea
+                        id="promptInput"
+                        placeholder="Describe the image you want to generate (e.g., 'a serene mountain landscape at sunset')"
+                        rows="3"
+                        required
+                    ></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="iterationsInput">Iterations</label>
+                        <input
+                            type="number"
+                            id="iterationsInput"
+                            min="1"
+                            max="10"
+                            value="3"
+                            required
+                        >
+                        <small>Number of times to iterate (1-10)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="apiKeyInput">OpenAI API Key</label>
+                        <input
+                            type="password"
+                            id="apiKeyInput"
+                            placeholder="sk-..."
+                            required
+                        >
+                        <small>Your API key is only stored in memory</small>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" id="startButton" class="btn-primary">
+                        Start Generation
+                    </button>
+                    <button type="button" id="stopButton" class="btn-secondary" style="display: none;">
+                        Stop
+                    </button>
+                    <button type="button" id="clearButton" class="btn-secondary">
+                        Clear Results
+                    </button>
+                </div>
+
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" id="rememberApiKey">
+                        Remember API key (stored in browser localStorage)
+                    </label>
+                </div>
+            </form>
+        </section>
+
+        <div id="errorDisplay" class="error-box" style="display: none;"></div>
+
+        <div id="progressSection" class="progress-section" style="display: none;">
+            <div class="progress-info">
+                <span id="progressText">Starting...</span>
+                <span id="timeElapsed">0s</span>
+            </div>
+            <div class="progress-bar">
+                <div id="progressFill" class="progress-fill"></div>
+            </div>
+        </div>
+
+        <section id="resultsSection" class="results-section">
+            <h2>Results</h2>
+            <div id="resultsContainer" class="results-container"></div>
+        </section>
+    </div>
+
+    <footer>
+        <p>
+            Powered by OpenAI DALL-E 3 & GPT-4 Vision |
+            <a href="https://platform.openai.com/api-keys" target="_blank">Get API Key</a>
+        </p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
