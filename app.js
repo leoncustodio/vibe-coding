@@ -1,9 +1,9 @@
 // Configuration
 const CONFIG = {
     OPENAI_API_BASE: 'https://api.openai.com/v1',
-    DALLE_MODEL: 'dall-e-3',
+    DALLE_MODEL: 'dall-e-2', // Using DALL-E 2 for lower cost
     VISION_MODEL: 'gpt-4o',
-    IMAGE_SIZE: '1024x1024',
+    IMAGE_SIZE: '512x512', // Lower resolution for optimal credit usage
     MAX_DESCRIPTION_TOKENS: 300,
     API_KEY_STORAGE_KEY: 'openai_api_key'
 };
