@@ -182,6 +182,9 @@ async function runIterations(initialPrompt, iterations, apiKey) {
 }
 
 async function generateImage(prompt, apiKey) {
+    // Add GarticPhone-style drawing instruction to the prompt
+    const styledPrompt = `${prompt}. Draw this in a simple, hand-drawn style like GarticPhone or Pictionary: sketchy lines, amateur drawing, colorful but basic, like a quick doodle made with a drawing tablet, simple shapes, childlike and playful art style`;
+
     const response = await fetch(`${CONFIG.OPENAI_API_BASE}/images/generations`, {
         method: 'POST',
         headers: {
@@ -190,7 +193,7 @@ async function generateImage(prompt, apiKey) {
         },
         body: JSON.stringify({
             model: CONFIG.DALLE_MODEL,
-            prompt: prompt,
+            prompt: styledPrompt,
             n: 1,
             size: CONFIG.IMAGE_SIZE
         })
