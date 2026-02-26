@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rastreador de Imóveis</title>
+    <link rel="stylesheet" href="popup.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-emoji">🏠</div>
+        <div class="loading-text">Extraindo dados do imóvel...</div>
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Not Property Page Screen -->
+    <div id="notPropertyScreen" class="screen" style="display: none;">
+        <div class="hero-emoji">🔍</div>
+        <h2 class="screen-title">Não é uma página de imóvel</h2>
+        <p class="screen-description">
+            Navegue até uma página de detalhes de imóvel em um dos sites suportados:
+        </p>
+        <ul class="supported-sites">
+            <li>🏢 ZAP Imóveis</li>
+            <li>🏘️ Viva Real</li>
+            <li>🏡 Imovelweb</li>
+            <li>🏠 OLX Imóveis</li>
+            <li>🏢 QuintoAndar</li>
+            <li>🏘️ Loft</li>
+        </ul>
+        <button id="openSettings" class="btn btn-secondary">
+            <span class="btn-emoji">⚙️</span>
+            <span>Configurações</span>
+        </button>
+    </div>
+
+    <!-- Not Authenticated Screen -->
+    <div id="notAuthScreen" class="screen" style="display: none;">
+        <div class="hero-emoji">🔐</div>
+        <h2 class="screen-title">Bem-vindo!</h2>
+        <p class="screen-description">
+            Conecte sua conta Google para começar a salvar imóveis no Google Sheets.
+        </p>
+        <button id="connectGoogle" class="btn btn-primary">
+            <span class="btn-emoji">🔗</span>
+            <span>Conectar Google Sheets</span>
+        </button>
+        <p class="help-text">
+            Seus dados ficam seguros e são salvos apenas na sua planilha pessoal.
+        </p>
+    </div>
+
+    <!-- Main Preview Screen -->
+    <div id="previewScreen" class="screen" style="display: none;">
+        <div class="header">
+            <div class="header-icon">🏠</div>
+            <div class="header-content">
+                <h1 class="header-title">Salvar Imóvel</h1>
+                <p class="header-subtitle" id="siteDetected"></p>
+            </div>
+        </div>
+
+        <!-- Duplicate Warning -->
+        <div id="duplicateWarning" class="warning-card" style="display: none;">
+            <span class="warning-emoji">⚠️</span>
+            <div class="warning-content">
+                <strong>Imóvel já salvo!</strong>
+                <p id="duplicateMessage"></p>
+            </div>
+        </div>
+
+        <!-- Property Data Form -->
+        <form id="propertyForm" class="property-form">
+            <!-- Required Fields -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <span class="section-emoji">📍</span>
+                    Informações Principais
+                </h3>
+
+                <div class="input-group">
+                    <label for="address">Endereço <span class="required">*</span></label>
+                    <input type="text" id="address" required>
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="neighborhood">Bairro</label>
+                        <input type="text" id="neighborhood">
+                    </div>
+                    <div class="input-group">
+                        <label for="city">Cidade</label>
+                        <input type="text" id="city">
+                    </div>
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="state">Estado (UF)</label>
+                        <input type="text" id="state" maxlength="2" placeholder="SP">
+                    </div>
+                    <div class="input-group">
+                        <label for="cep">CEP</label>
+                        <input type="text" id="cep" placeholder="12345-678">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Financial Info -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <span class="section-emoji">💰</span>
+                    Valores
+                </h3>
+
+                <div class="input-group">
+                    <label for="price">Preço <span class="required">*</span></label>
+                    <div class="input-with-icon">
+                        <span class="input-icon">R$</span>
+                        <input type="text" id="price" required placeholder="850.000,00">
+                    </div>
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="condominiumFee">Condomínio</label>
+                        <div class="input-with-icon">
+                            <span class="input-icon">R$</span>
+                            <input type="text" id="condominiumFee" placeholder="500,00">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="iptu">IPTU</label>
+                        <div class="input-with-icon">
+                            <span class="input-icon">R$</span>
+                            <input type="text" id="iptu" placeholder="200,00">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Property Features -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <span class="section-emoji">🛏️</span>
+                    Características
+                </h3>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="bedrooms">Quartos</label>
+                        <input type="number" id="bedrooms" min="0" placeholder="3">
+                    </div>
+                    <div class="input-group">
+                        <label for="bathrooms">Banheiros</label>
+                        <input type="number" id="bathrooms" min="0" placeholder="2">
+                    </div>
+                    <div class="input-group">
+                        <label for="squareMeters">Área (m²)</label>
+                        <input type="number" id="squareMeters" min="0" placeholder="85">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="propertyType">Tipo de Imóvel</label>
+                    <input type="text" id="propertyType" placeholder="Apartamento">
+                </div>
+            </div>
+
+            <!-- Notes & Status -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <span class="section-emoji">📝</span>
+                    Notas e Status
+                </h3>
+
+                <div class="input-group">
+                    <label for="notes">Observações</label>
+                    <textarea id="notes" rows="3" placeholder="Adicione suas observações sobre o imóvel..."></textarea>
+                    <small class="input-hint">Máx. 1000 caracteres</small>
+                </div>
+
+                <div class="input-group">
+                    <label for="status">Status</label>
+                    <select id="status">
+                        <option value="Interessado">Interessado</option>
+                        <option value="Contatado">Contatado</option>
+                        <option value="Visita Agendada">Visita Agendada</option>
+                        <option value="Visitado">Visitado</option>
+                        <option value="Proposta Enviada">Proposta Enviada</option>
+                        <option value="Rejeitado">Rejeitado</option>
+                        <option value="Não Interessado">Não Interessado</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="form-actions">
+                <button type="submit" id="saveButton" class="btn btn-primary">
+                    <span class="btn-emoji">✨</span>
+                    <span>Salvar no Sheets</span>
+                </button>
+                <button type="button" id="cancelButton" class="btn btn-secondary">
+                    <span class="btn-emoji">✖️</span>
+                    <span>Cancelar</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Success Screen -->
+    <div id="successScreen" class="screen" style="display: none;">
+        <div class="success-animation">
+            <div class="success-emoji">🎉</div>
+            <div class="success-checkmark">✓</div>
+        </div>
+        <h2 class="screen-title">Imóvel Salvo!</h2>
+        <p class="screen-description" id="successMessage"></p>
+        <div class="success-actions">
+            <button id="viewInSheets" class="btn btn-primary">
+                <span class="btn-emoji">📊</span>
+                <span>Ver no Sheets</span>
+            </button>
+            <button id="saveAnother" class="btn btn-secondary">
+                <span class="btn-emoji">🏠</span>
+                <span>Salvar Outro</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Error Screen -->
+    <div id="errorScreen" class="screen" style="display: none;">
+        <div class="hero-emoji error-emoji">😅</div>
+        <h2 class="screen-title">Ops! Algo deu errado</h2>
+        <div class="error-message" id="errorMessage"></div>
+        <div class="error-actions">
+            <button id="retryButton" class="btn btn-primary">
+                <span class="btn-emoji">🔄</span>
+                <span>Tentar Novamente</span>
+            </button>
+            <button id="reportIssue" class="btn btn-secondary">
+                <span class="btn-emoji">📧</span>
+                <span>Reportar Problema</span>
+            </button>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

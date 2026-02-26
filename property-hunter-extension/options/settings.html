@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações - Rastreador de Imóveis</title>
+    <link rel="stylesheet" href="settings.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="hero">
+            <div class="hero-emoji">🏠✨</div>
+            <h1 class="hero-title">
+                <span class="gradient-text">Rastreador de Imóveis</span>
+            </h1>
+            <p class="hero-subtitle">Configure sua extensão para começar a salvar imóveis</p>
+        </header>
+
+        <!-- Welcome Message (shown only on first install) -->
+        <div id="welcomeMessage" class="info-card" style="display: none;">
+            <span class="info-emoji">🎉</span>
+            <div class="info-content">
+                <strong>Bem-vindo!</strong>
+                <p>Vamos configurar sua extensão em poucos passos.</p>
+            </div>
+        </div>
+
+        <!-- Connection Status -->
+        <section class="settings-section">
+            <h2 class="section-title">
+                <span class="section-emoji">🔗</span>
+                Conexão com Google Sheets
+            </h2>
+
+            <div id="connectionStatus" class="status-card">
+                <div class="status-indicator" id="statusIndicator">
+                    <div class="status-dot"></div>
+                    <span id="statusText">Verificando conexão...</span>
+                </div>
+
+                <div id="connectedInfo" style="display: none;">
+                    <p><strong>Planilha Conectada:</strong> <span id="spreadsheetName">—</span></p>
+                    <p><strong>Última atualização:</strong> <span id="lastUpdate">—</span></p>
+                    <div class="button-group">
+                        <button id="openSpreadsheet" class="btn btn-secondary">
+                            <span class="btn-emoji">📊</span>
+                            <span>Abrir Planilha</span>
+                        </button>
+                        <button id="disconnectBtn" class="btn btn-danger">
+                            <span class="btn-emoji">🔌</span>
+                            <span>Desconectar</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="notConnectedInfo" style="display: none;">
+                    <p>Conecte sua conta Google para começar a salvar imóveis no Google Sheets.</p>
+                    <button id="connectBtn" class="btn btn-primary">
+                        <span class="btn-emoji">🔗</span>
+                        <span>Conectar Google Sheets</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spreadsheet Selection -->
+        <section class="settings-section" id="spreadsheetSection" style="display: none;">
+            <h2 class="section-title">
+                <span class="section-emoji">📊</span>
+                Selecionar Planilha
+            </h2>
+
+            <div class="input-card">
+                <label for="spreadsheetSelect">Escolha uma planilha existente ou crie uma nova</label>
+                <select id="spreadsheetSelect" class="input-select">
+                    <option value="">Carregando planilhas...</option>
+                </select>
+                <button id="createNewSpreadsheet" class="btn btn-secondary" style="margin-top: 10px;">
+                    <span class="btn-emoji">➕</span>
+                    <span>Criar Nova Planilha</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Preferences -->
+        <section class="settings-section">
+            <h2 class="section-title">
+                <span class="section-emoji">⚙️</span>
+                Preferências
+            </h2>
+
+            <div class="preference-card">
+                <div class="preference-item">
+                    <div class="preference-info">
+                        <label>Fechar automaticamente após salvar</label>
+                        <p class="preference-description">O popup fecha automaticamente após salvar com sucesso</p>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="autoClose" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="preference-item">
+                    <div class="preference-info">
+                        <label>Mostrar avisos de duplicados</label>
+                        <p class="preference-description">Alerta quando você tentar salvar um imóvel já salvo</p>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="showDuplicateWarning" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="preference-item">
+                    <div class="preference-info">
+                        <label>Status padrão</label>
+                        <p class="preference-description">Status inicial para novos imóveis</p>
+                    </div>
+                    <select id="defaultStatus" class="input-select-small">
+                        <option value="Interessado">Interessado</option>
+                        <option value="Contatado">Contatado</option>
+                        <option value="A Visitar">A Visitar</option>
+                    </select>
+                </div>
+            </div>
+
+            <button id="savePreferences" class="btn btn-primary">
+                <span class="btn-emoji">💾</span>
+                <span>Salvar Preferências</span>
+            </button>
+        </section>
+
+        <!-- About & Support -->
+        <section class="settings-section">
+            <h2 class="section-title">
+                <span class="section-emoji">📖</span>
+                Sobre & Suporte
+            </h2>
+
+            <div class="about-card">
+                <p><strong>Versão:</strong> 1.0.0</p>
+                <p><strong>Sites Suportados:</strong></p>
+                <ul class="supported-list">
+                    <li>🏢 ZAP Imóveis</li>
+                    <li>🏘️ Viva Real</li>
+                    <li>🏡 Imovelweb</li>
+                    <li>🏠 OLX Imóveis</li>
+                    <li>🏢 QuintoAndar</li>
+                    <li>🏘️ Loft</li>
+                </ul>
+
+                <div class="button-group">
+                    <button id="viewDocs" class="btn btn-secondary">
+                        <span class="btn-emoji">📚</span>
+                        <span>Documentação</span>
+                    </button>
+                    <button id="reportBug" class="btn btn-secondary">
+                        <span class="btn-emoji">🐛</span>
+                        <span>Reportar Problema</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Success Message -->
+        <div id="successMessage" class="success-toast" style="display: none;">
+            <span class="toast-emoji">✓</span>
+            <span id="successText">Configurações salvas!</span>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Feito com 💜 para caçadores de imóveis</p>
+    </footer>
+
+    <script src="settings.js"></script>
+</body>
+</html>

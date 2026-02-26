@@ -1,0 +1,79 @@
+{
+  "manifest_version": 3,
+  "name": "Rastreador de Imóveis",
+  "version": "1.0.0",
+  "description": "Salve dados de imóveis em Google Sheets com um clique. Funciona em ZAP Imóveis, Viva Real, Imovelweb, OLX, QuintoAndar e Loft.",
+  "icons": {
+    "16": "assets/icons/icon16.png",
+    "32": "assets/icons/icon32.png",
+    "48": "assets/icons/icon48.png",
+    "128": "assets/icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "assets/icons/icon16.png",
+      "32": "assets/icons/icon32.png",
+      "48": "assets/icons/icon48.png",
+      "128": "assets/icons/icon128.png"
+    },
+    "default_title": "Salvar Imóvel"
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "identity"
+  ],
+  "host_permissions": [
+    "https://www.zapimoveis.com.br/*",
+    "https://www.vivareal.com.br/*",
+    "https://www.imovelweb.com.br/*",
+    "https://www.olx.com.br/*",
+    "https://www.quintoandar.com.br/*",
+    "https://www.loft.com.br/*",
+    "https://sheets.googleapis.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://www.zapimoveis.com.br/*"],
+      "js": ["lib/property-parser.js", "content-scripts/common-extractor.js", "content-scripts/zapimoveis-extractor.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://www.vivareal.com.br/*"],
+      "js": ["lib/property-parser.js", "content-scripts/common-extractor.js", "content-scripts/vivareal-extractor.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://www.imovelweb.com.br/*"],
+      "js": ["lib/property-parser.js", "content-scripts/common-extractor.js", "content-scripts/imovelweb-extractor.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://www.olx.com.br/imoveis/*"],
+      "js": ["lib/property-parser.js", "content-scripts/common-extractor.js", "content-scripts/olx-extractor.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://www.quintoandar.com.br/*"],
+      "js": ["lib/property-parser.js", "content-scripts/common-extractor.js", "content-scripts/quintoandar-extractor.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://www.loft.com.br/*"],
+      "js": ["lib/property-parser.js", "content-scripts/common-extractor.js", "content-scripts/loft-extractor.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js",
+    "type": "module"
+  },
+  "options_page": "options/settings.html",
+  "oauth2": {
+    "client_id": "YOUR_CLIENT_ID.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/spreadsheets"
+    ]
+  }
+}
